@@ -1,0 +1,42 @@
+﻿@model QuestionModel
+<div class="text-center">
+
+	<h1 class="display-4 text-center">Editar questão </h1>
+
+</div>
+
+<form asp-controller="Questions" asp-action="Alterar" method="post">
+    <input type="hidden" asp-for="Id" />
+<div class="mb-4">
+    <label for="InputQuestion" class="form-label fw-bold text-primary">Cadastre a nova questão:</label>
+    <textarea class="form-control border-primary shadow-sm" id="InputQuestion" asp-for="Question" rows="4" placeholder="Digite a pergunta..." required></textarea>
+</div>
+
+<div class="mb-4">
+    <label for="SelectLevel" class="form-label fw-bold text-primary">Nível da questão:</label>
+    <select class="form-select border-primary shadow-sm" id="SelectLevel" asp-for="Level" required onchange="updateLevelColor(this)">
+        <option value="" selected disabled>Selecione o nível</option>
+        <option value="Fácil" class="text-success">Fácil</option>
+        <option value="Médio" class="text-warning">Médio</option>
+        <option value="Difícil" class="text-danger">Difícil</option>
+    </select>
+</div>
+
+<div class="mb-4">
+    <label for="CorrectAnswer" class="form-label fw-bold text-primary">Alternativa correta:</label>
+    <select class="form-select border-primary shadow-sm" id="CorrectAnswer" asp-for="CorrectAlternative" required>
+        <option value="" selected disabled>Selecione a resposta correta</option>
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+    </select>
+</div>
+
+<div class="d-flex justify-content-end">
+	<a class="btn btn-secondary me-2" asp-controller="Questions" asp-action="Index">Voltar</a>
+	<button type="submit" class="btn btn-primary px-4">Editar</button>
+</div>
+
+</form>
+

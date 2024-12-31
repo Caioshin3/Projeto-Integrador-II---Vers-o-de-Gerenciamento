@@ -1,0 +1,71 @@
+﻿@model List<UserModel>
+@{
+	ViewData["Title"] = "Listagem de Usuários";
+}
+
+<div class="d-grid gap-2 d-md-flex justify-content-md-start">
+    <a class="btn btn-primary" asp-controller="User" asp-action="Create" role="button">Adicionar novo usuário</a>
+</div>
+
+@if (TempData["MensagemSucesso"] != null)
+{
+	<div class="alert alert-success" role="alert">
+		<i class="fas fa-check-circle"></i>
+		@TempData["MensagemSucesso"]
+		<button type="button" class="close-alert" aria-label="Close">&times;</button>
+	</div>
+}
+
+@if (TempData["MensagemErro"] != null)
+{
+	<div class="alert alert-danger" role="alert">
+		<i class="fas fa-exclamation-circle"></i>
+		@TempData["MensagemErro"]
+		<button type="button" class="close-alert" aria-label="Close">&times;</button>
+	</div>
+}
+
+<h1 class="display-4">Listagem de usuários</h1>
+
+<table id="table-usuarios" class="display" style="width:100%">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Nome</th>
+			<th scope="col">Login</th>
+			<th scope="col">Email</th>
+			<th scope="col">Perfil</th>
+			<th scope="col">Data de cadastro</th>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var user in Model)
+            {
+                <tr>
+                    <th scope="row">@user.Id</th>
+                    <td>@user.Name</td>
+                    <td>@user.Login</td>
+                    <td>@user.Email</td>
+                    <td>@(user.Perfil == Sistema_de_Armazenamento_de_Questões.Enums.PerfilEnum.Admin?"Administrador" : "Padrão")</td>
+                    <td>@user.CreationDate</td>
+                    <td>
+                        <div class="d-flex justify-content-center gap-2">
+                            <a class="btn btn-primary btn-sm" asp-controller="User" asp-action="Edit" asp-route-id="@user.Id">Editar</a>
+                            <a class="btn btn-danger btn-sm" asp-controller="User" asp-action="Delete" asp-route-id="@user.Id">Excluir</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="odd"><td valign="top" colspan="6">Nenhum usuário encontrado</td></tr>
+        }
+    </tbody>
+
+
+
+</table>
