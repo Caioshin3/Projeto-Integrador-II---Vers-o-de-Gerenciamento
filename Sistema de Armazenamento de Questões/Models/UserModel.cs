@@ -27,5 +27,10 @@ namespace Sistema_de_Armazenamento_de_Questões.Models
         public DateTime CreationDate { get; set; }
 
         public DateTime? UpdateDate { get; set; }
+
+        public bool SenhaValida(string senha)
+        {
+            return Password == senha;
+        }
     }
 }

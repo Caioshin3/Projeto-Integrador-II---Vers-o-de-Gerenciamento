@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Sistema_de_Armazenamento_de_Questões.Filters;
 using Sistema_de_Armazenamento_de_Questões.Models;
 
 namespace Sistema_de_Armazenamento_de_Questões.Controllers
 {
+    [PaginaUserLogado]
     public class HomeController : Controller
     {
         public IActionResult Index()

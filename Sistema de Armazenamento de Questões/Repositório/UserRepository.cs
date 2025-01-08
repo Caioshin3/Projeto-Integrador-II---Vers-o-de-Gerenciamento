@@ -1,4 +1,5 @@
-﻿using Sistema_de_Armazenamento_de_Questões.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Sistema_de_Armazenamento_de_Questões.Data;
 using Sistema_de_Armazenamento_de_Questões.Models;
 
 namespace Sistema_de_Armazenamento_de_Questões.Repositório
@@ -14,6 +15,11 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
         public UserModel ListarPorId(int id)
         {
             return _bancoContext.Users.FirstOrDefault(x => x.Id == id);
+        }
+
+        public UserModel BuscarPorLogin(string login)
+        {
+            return _bancoContext.Users.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
         }
 
         public List<UserModel> BuscarTodos()
@@ -61,5 +67,6 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
 
             return true;
         }
+
     }
 }

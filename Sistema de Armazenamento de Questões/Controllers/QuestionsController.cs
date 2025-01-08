@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Sistema_de_Armazenamento_de_Questões.Models;
 using Sistema_de_Armazenamento_de_Questões.Repositório;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Sistema_de_Armazenamento_de_Questões.Controllers
 {
@@ -38,8 +39,21 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
 
         public IActionResult Apagar(int id)
         {
-            _questionRepository.Apagar(id);
-            return RedirectToAction("Index");
+            try
+            {
+                bool apagado = _questionRepository.Apagar(id);
+                if (apagado)
+                    TempData["MensagemSucesso"] = "Questão excluída com sucesso";
+
+                else TempData["MensagemErro"] = "Ops, não conseguimos cadastrar seu contato, tente novamante!";
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex) 
+            {
+                TempData["MensagemErro"] = $"Ops, não conseguimos excluit a questão, tente novamante, detalhe do erro: {ex.Message}";
+                return RedirectToAction("Index");
+            }
         }
 
         [HttpPost]

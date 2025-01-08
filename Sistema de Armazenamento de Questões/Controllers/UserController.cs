@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Sistema_de_Armazenamento_de_Questões.Filters;
 using Sistema_de_Armazenamento_de_Questões.Models;
 using Sistema_de_Armazenamento_de_Questões.Repositório;
 
 namespace Sistema_de_Armazenamento_de_Questões.Controllers
 {
+    [PaginaRestritaAdm]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;

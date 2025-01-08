@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Sistema_de_Armazenamento_de_Questões.Data;
+using Sistema_de_Armazenamento_de_Questões.Helpter;
 using Sistema_de_Armazenamento_de_Questões.Repositório;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddEntityFrameworkSqlServer()
     .AddDbContext<BancoContext>(o => o.UseSqlServer(builder.Configuration.GetConnectionString("Database")));
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ISessao, Sessao>();
+
+builder.Services.AddSession(o =>
+{
+    o.Cookie.HttpOnly = true;
+    o.Cookie.IsEssential = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +38,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",
