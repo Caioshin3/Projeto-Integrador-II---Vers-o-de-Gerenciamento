@@ -24,6 +24,11 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
             return View();
         }
 
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+
         public IActionResult Sair()
         {
             _sessao.RemoverSessaoDoUsuarios();

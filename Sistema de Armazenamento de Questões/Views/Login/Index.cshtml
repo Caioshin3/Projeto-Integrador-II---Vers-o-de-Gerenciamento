@@ -183,8 +183,16 @@
                     @Html.ValidationMessageFor(x => x.Senha)
                 </div>
                 <button type="submit" class="btn btn-dark w-100 py-2">ENTRAR</button>
+                <div class="mt-4"></div>
+
+                <p class="mb-4 text-sm-center mx-auto">
+                    Esqueceu sua senha?
+                    <a asp-action="ResetPassword" asp-controller="Login" class="text-primary text-gradient font-weight-bold">   Redefinir minha senha</a>
+                </p>
             </form>
         </div>
+
+
 
         <div class="logo-section">
             <img src="https://upload.wikimedia.org/wikipedia/commons/1/1d/Brasao_ufc.svg" alt="Brasão">

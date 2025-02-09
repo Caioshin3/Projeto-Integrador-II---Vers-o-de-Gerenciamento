@@ -30,6 +30,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
         public UserModel Add(UserModel user)
         {
             user.CreationDate = DateTime.Now;
+            user.SetPasswordHash();
             _bancoContext.Users.Add(user);
             _bancoContext.SaveChanges();
             return user;

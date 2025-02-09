@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Sistema_de_Armazenamento_de_Questões.Enums;
+using Sistema_de_Armazenamento_de_Questões.Helpter;
 
 namespace Sistema_de_Armazenamento_de_Questões.Models
 {
@@ -30,7 +31,12 @@ namespace Sistema_de_Armazenamento_de_Questões.Models
 
         public bool SenhaValida(string senha)
         {
-            return Password == senha;
+            return Password == senha.GenerateHash();
+        }
+
+        public void SetPasswordHash()
+        {
+            Password = Password.GenerateHash();
         }
     }
 }
