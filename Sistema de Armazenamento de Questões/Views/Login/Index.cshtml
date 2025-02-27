@@ -1,4 +1,4 @@
-﻿@model LoginModel;
+﻿@model LoginModel
 @{
     Layout = "_LayoutDeslogada";
     ViewData["Title"] = "Login";
@@ -160,6 +160,15 @@
         <div class="alert alert-danger" role="alert">
             <i class="fas fa-exclamation-circle"></i>
             @TempData["MensagemErro"]
+            <button type="button" class="close-alert" aria-label="Close">&times;</button>
+        </div>
+    }
+
+    @if (TempData["MensagemSucesso"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle"></i>
+            @TempData["MensagemSucesso"]
             <button type="button" class="close-alert" aria-label="Close">&times;</button>
         </div>
     }

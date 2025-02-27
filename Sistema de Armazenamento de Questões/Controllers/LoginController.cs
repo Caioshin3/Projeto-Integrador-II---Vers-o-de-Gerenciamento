@@ -33,7 +33,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
         {
             _sessao.RemoverSessaoDoUsuarios();
 
-            return RedirectToAction("Index", "Login");   
+            return RedirectToAction("Index", "Login");
         }
 
         [HttpPost]
@@ -65,6 +65,35 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
             catch (Exception ex)
             {
                 TempData["MensagemErro"] = $"Ops, não conseguimos realizar o seu login, tente novamente, detalhe do erro:{ex.Message}";
+                return RedirectToAction("Index");
+            }
+        }
+
+        [HttpPost]
+        public IActionResult SendLinkToResetPassword(ResetPasswordModel resetPasswordModel)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    UserModel user = _userRepository.BuscarPorEmailELogin(resetPasswordModel.Email, resetPasswordModel.Login);
+
+                    if (user != null)
+                    {
+                        string newPassword = user.GenerateNewPassword();
+
+                        TempData["MensagemSucesso"] = $"Enviamos uma nova senha para o e-mail cadastrado.";
+                        return RedirectToAction("Index", "Login");
+                    }
+
+                    TempData["MensagemErro"] = $"Ops, não conseguimos redefinir a sua senha. Tente novamente.";
+                }
+
+                return View("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["MensagemErro"] = $"Ops, não conseguimos redefinir a sua senha, tente novamente, detalhe do erro:{ex.Message}";
                 return RedirectToAction("Index");
             }
         }

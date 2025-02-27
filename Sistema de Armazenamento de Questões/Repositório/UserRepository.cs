@@ -22,6 +22,11 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
             return _bancoContext.Users.FirstOrDefault(x => x.Login.ToUpper() == login.ToUpper());
         }
 
+        public UserModel BuscarPorEmailELogin(string email, string login)
+        {
+            return _bancoContext.Users.FirstOrDefault(x => x.Email.ToUpper() == email.ToUpper() && x.Login.ToUpper() == login.ToUpper());
+        }
+
         public List<UserModel> BuscarTodos()
         {
             return _bancoContext.Users.ToList();
@@ -68,6 +73,5 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
 
             return true;
         }
-
     }
 }

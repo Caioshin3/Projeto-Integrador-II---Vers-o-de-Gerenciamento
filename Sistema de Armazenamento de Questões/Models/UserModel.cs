@@ -38,5 +38,12 @@ namespace Sistema_de_Armazenamento_de_Questões.Models
         {
             Password = Password.GenerateHash();
         }
+
+        public string GenerateNewPassword()
+        {
+            string newPassword = Guid.NewGuid().ToString().Substring(0,8);
+            Password = newPassword.GenerateHash();
+            return newPassword;
+        }
     }
 }
