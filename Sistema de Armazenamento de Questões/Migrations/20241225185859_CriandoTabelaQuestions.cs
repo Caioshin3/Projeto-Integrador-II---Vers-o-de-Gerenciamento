@@ -18,7 +18,8 @@ namespace Sistema_de_Armazenamento_de_Questões.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Level = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CorrectAlternative = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CorrectAlternative = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discipline = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {

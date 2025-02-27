@@ -1,11 +1,12 @@
 ﻿@model QuestionModel
+
 <div class="text-center py-4 bg-primary text-white rounded">
     <h1 class="display-4">Cadastrar Questão</h1>
 </div>
 
-<form asp-controller="Questions" asp-action="Criar" method="post" class="mt-4 p-4 bg-light shadow rounded">
+<form asp-controller="Questions" asp-action="Criar" method="post" class="mt-4 p-4 bg-light shadow rounded" onsubmit="return concatenateQuestionText();">
     <div class="mb-4">
-        <label for="InputQuestion" class="form-label fw-bold text-primary">Cadastre a nova questão:</label>
+        <label for="InputQuestion" class="form-label fw-bold text-primary">Enunciado da questão:</label>
         <textarea class="form-control border-primary shadow-sm" id="InputQuestion" asp-for="Question" rows="4" placeholder="Digite a pergunta..." required></textarea>
     </div>
 
@@ -20,13 +21,30 @@
     </div>
 
     <div class="mb-4">
+        <label for="SelectLevel" class="form-label fw-bold text-primary">Categoria da questão:</label>
+        <select class="form-select border-primary shadow-sm" id="SelectDiscipline" asp-for="Discipline" required>
+            <option value="" selected disabled>Selecione o nível</option>
+            <option value="Matemática" >Matemática</option>
+            <option value="Informática" >Informática</option>
+            <option value="Portugol" >Portugol</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label fw-bold text-primary">Número de Alternativas:</label>
+        <input type="number" id="alternativeCount" class="form-control border-primary shadow-sm" min="2" max="10" value="4">
+        <button type="button" class="btn btn-primary mt-2" onclick="setAlternativeCount()">Definir</button>
+    </div>
+
+    <div class="mb-4">
+        <label class="form-label fw-bold text-primary">Alternativas:</label>
+        <div id="alternativesContainer"></div>
+    </div>
+
+    <div class="mb-4">
         <label for="CorrectAnswer" class="form-label fw-bold text-primary">Alternativa correta:</label>
         <select class="form-select border-primary shadow-sm" id="CorrectAnswer" asp-for="CorrectAlternative" required>
             <option value="" selected disabled>Selecione a resposta correta</option>
-            <option value="A">A</option>
-            <option value="B">B</option>
-            <option value="C">C</option>
-            <option value="D">D</option>
         </select>
     </div>
 
@@ -41,4 +59,68 @@
         const selectedOption = select.options[select.selectedIndex];
         select.className = 'form-select border-primary shadow-sm ' + selectedOption.className;
     }
+
+    function setAlternativeCount() {
+        const container = document.getElementById("alternativesContainer");
+        const correctAnswerSelect = document.getElementById("CorrectAnswer");
+        container.innerHTML = "";
+        correctAnswerSelect.innerHTML = '<option value="" selected disabled>Selecione a resposta correta</option>';
+
+        let count = parseInt(document.getElementById("alternativeCount").value);
+        count = isNaN(count) || count < 2 ? 2 : count > 10 ? 10 : count;
+
+        for (let i = 0; i < count; i++) {
+            const letter = String.fromCharCode(65 + i);
+
+            const div = document.createElement("div");
+            div.classList.add("input-group", "mb-2", "alternative");
+
+            div.innerHTML = `
+                <span class="input-group-text">${letter}</span>
+                <input type="text" class="form-control border-primary shadow-sm" name="Alternatives[]" required>
+                <button type="button" class="btn btn-danger" onclick="removeAlternative(this)">X</button>
+            `;
+            container.appendChild(div);
+
+            correctAnswerSelect.innerHTML += `<option value="${letter}">${letter}</option>`;
+        }
+    }
+
+    function removeAlternative(button) {
+        button.parentElement.remove();
+        updateCorrectAnswerOptions();
+    }
+
+    function updateCorrectAnswerOptions() {
+        const correctAnswerSelect = document.getElementById("CorrectAnswer");
+        correctAnswerSelect.innerHTML = '<option value="" selected disabled>Selecione a resposta correta</option>';
+
+        document.querySelectorAll("#alternativesContainer .alternative").forEach((alt, index) => {
+            const letter = String.fromCharCode(65 + index);
+            correctAnswerSelect.innerHTML += `<option value="${letter}">${letter}</option>`;
+        });
+    }
+
+    function concatenateQuestionText() {
+        var questionTextarea = document.getElementById("InputQuestion");
+        var originalQuestion = questionTextarea.value.trim();
+        var concatenated = originalQuestion;
+
+        // Itera pelas alternativas e adiciona cada uma no formato "A) texto"
+        var alternatives = document.querySelectorAll("#alternativesContainer .alternative");
+        if (alternatives.length > 0) {
+            alternatives.forEach((alt, index) => {
+                var letter = String.fromCharCode(65 + index);
+                var inputField = alt.querySelector("input");
+                var alternativeText = inputField.value.trim();
+                concatenated += `\n\n${letter}) ${alternativeText}`;
+            });
+        }
+        questionTextarea.value = concatenated;
+        return true; // prossegue com o envio do formulário
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        setAlternativeCount();
+    });
 </script>

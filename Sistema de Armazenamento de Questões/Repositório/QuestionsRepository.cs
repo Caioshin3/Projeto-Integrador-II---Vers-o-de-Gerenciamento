@@ -39,6 +39,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
             questionDB.Question = questionAtua.Question;
             questionDB.Level = questionAtua.Level;
             questionDB.CorrectAlternative = questionAtua.CorrectAlternative;
+            questionDB.Discipline = questionAtua.Discipline;
 
             _bancoContext.Questions.Update(questionDB);
             _bancoContext.SaveChanges();
