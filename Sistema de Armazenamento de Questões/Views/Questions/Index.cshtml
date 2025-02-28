@@ -34,8 +34,8 @@
 		</div>
 		<div class="col-auto">
 			<div class="mb-3">
-				<label for="filterLevel" class="form-label" style="font-size: 1.1rem; margin-bottom: 0.2rem; position: relative;">Filtrar por Nível:</label>
-				<select id="filterLevel" class="form-select" style="width: 200px; position: relative;">
+				<label for="filterLevel" class="form-label" style="font-size: 1.1rem; margin-bottom: 0.2rem;">Filtrar por Nível:</label>
+				<select id="filterLevel" class="form-select" style="width: 200px;">
 					<option value="">Todos</option>
 					<option value="Fácil">Fácil</option>
 					<option value="Médio">Médio</option>
@@ -67,14 +67,10 @@
 					{
 						<tr class="@GetLevelColorClass(questionView.Level)" data-level="@questionView.Level">
 							<td>@questionView.Id</td>
-							<td>
-								@Html.Raw(FormatQuestionWithAlternatives(questionView.Question))
-							</td>
+							<td>@Html.Raw(FormatQuestionWithAlternatives(questionView.Question))</td>
 							<td>@questionView.Level</td>
-							<td class="@(string.IsNullOrEmpty(questionView.CorrectAlternative) ? "" : "text-center")">
-								@questionView.CorrectAlternative
-							</td>
-
+							<td>@questionView.Categorie</td>
+							<td class="text-center">@questionView.CorrectAlternative</td>
 							<td>
 								<div class="d-flex justify-content-center gap-2">
 									<a class="btn btn-primary btn-sm" asp-controller="Questions" asp-action="Edit" asp-route-id="@questionView.Id">Editar</a>
@@ -87,7 +83,7 @@
 				else
 				{
 					<tr>
-						<td colspan="5" class="text-center">Nenhuma questão encontrada.</td>
+						<td colspan="6" class="text-center">Nenhuma questão encontrada.</td>
 					</tr>
 				}
 			</tbody>
@@ -102,7 +98,7 @@
 
 		rows.forEach(row => {
 			const level = row.getAttribute('data-level');
-			if (selectedLevel === '' || level === selectedLevel) {
+			if (!level || selectedLevel === '' || level === selectedLevel) {
 				row.style.display = '';
 			} else {
 				row.style.display = 'none';
@@ -116,29 +112,15 @@
 	{
 		var questionAndAlternatives = questionText.Split(new[] { "A)", "B)", "C)", "D)", "a)", "b)", "c)", "d)" }, StringSplitOptions.None);
 
-		var question = questionAndAlternatives[0].Trim(); 
+		var question = questionAndAlternatives[0].Trim();
 
 		var alternatives = new List<string>();
-		if (questionAndAlternatives.Length > 1)
-		{
-			alternatives.Add("A) " + questionAndAlternatives[1].Trim());
-		}
-		if (questionAndAlternatives.Length > 2)
-		{
-			alternatives.Add("B) " + questionAndAlternatives[2].Trim());
-		}
-		if (questionAndAlternatives.Length > 3)
-		{
-			alternatives.Add("C) " + questionAndAlternatives[3].Trim());
-		}
-		if (questionAndAlternatives.Length > 4)
-		{
-			alternatives.Add("D) " + questionAndAlternatives[4].Trim());
-		}
+		if (questionAndAlternatives.Length > 1) alternatives.Add("A) " + questionAndAlternatives[1].Trim());
+		if (questionAndAlternatives.Length > 2) alternatives.Add("B) " + questionAndAlternatives[2].Trim());
+		if (questionAndAlternatives.Length > 3) alternatives.Add("C) " + questionAndAlternatives[3].Trim());
+		if (questionAndAlternatives.Length > 4) alternatives.Add("D) " + questionAndAlternatives[4].Trim());
 
-		var formattedText = $"{question}<br /><br />{string.Join("<br />", alternatives)}";
-
-		return formattedText;
+		return $"{question}<br /><br />{string.Join("<br />", alternatives)}";
 	}
 
 	public string GetLevelColorClass(string level)

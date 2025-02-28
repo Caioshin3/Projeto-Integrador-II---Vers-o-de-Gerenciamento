@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -21,14 +20,6 @@
             padding: 50px 0;
             text-align: center;
         }
-
-            .header h1 {
-                font-size: 4rem;
-            }
-
-            .header p {
-                font-size: 1.2rem;
-            }
 
         .card {
             border-radius: 15px;
@@ -83,7 +74,8 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-md-4 d-flex">
-                <a href="">
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Matemática" })">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
                     <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
                         <img src="https://w7.pngwing.com/pngs/524/374/png-transparent-multicolored-math-illustration-vedic-mathematics-euclidean-children-discuss-math-child-painted-text-thumbnail.png" class="img-animation" alt="Logo Matemática Infantil" data-animation="true">
                         <div class="card-body">
@@ -94,28 +86,32 @@
                 </a>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjEO7xilqAr6N6m4GxrvQDH6n-XrCA26p9OgewhdXQRarrRG6TSjc-UXSipewrrmJpkDa1Zc7BHx3h_2ZoE9DpzCUhjOtStRtehmAnGfzMMejDAYr_Tg45KlIRrhCHvWZxMxOKN3UTN8Thf/s1600/1627912585622617-0.png" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text">Desafios para o aprendizado de Informática</p>
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Informática" })">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjEO7xilqAr6N6m4GxrvQDH6n-XrCA26p9OgewhdXQRarrRG6TSjc-UXSipewrrmJpkDa1Zc7BHx3h_2ZoE9DpzCUhjOtStRtehmAnGfzMMejDAYr_Tg45KlIRrhCHvWZxMxOKN3UTN8Thf/s1600/1627912585622617-0.png" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">Desafios para o aprendizado de Informática</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             <div class="col-md-4 d-flex">
-                <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                    <img src="https://media.licdn.com/dms/image/v2/C5612AQEOW_aOybiE6A/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520204903899?e=2147483647&v=beta&t=onKTadAgd8HLASp3_fJK310VNuJxA_9uAV7ieCms4xU" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
-                    <div class="card-body">
-                        <h5 class="card-title"></h5>
-                        <p class="card-text">Incentive a leitura com questões de algortimos e portugol!</p>
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Portugol" })">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
+                        <img src="https://media.licdn.com/dms/image/v2/C5612AQEOW_aOybiE6A/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520204903899?e=2147483647&v=beta&t=onKTadAgd8HLASp3_fJK310VNuJxA_9uAV7ieCms4xU" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
+                        <div class="card-body">
+                            <h5 class="card-title"></h5>
+                            <p class="card-text">Incentive a leitura com questões de algoritmos e portugol!</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
 
     <div class="text-center mt-5">
-        <a class="btn btn-lg btn-custom" asp-controller="Questions" asp-action="Create">Comece Agora</a>
+        <a class="btn btn-lg btn-custom" href="@Url.Action("QuestionDisplay", "Questions")">Comece Agora</a>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

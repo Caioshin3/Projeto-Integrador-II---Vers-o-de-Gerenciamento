@@ -8,7 +8,7 @@
 
         public string Level { get; set; }
 
-        public string Discipline { get; set; }
+        public string Categorie { get; set; }
 
         public string CorrectAlternative { get; set; }
     }

@@ -1,0 +1,99 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.QuestionModel>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questões - @ViewBag.Categoria</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .header {
+            background: linear-gradient(to right, #007bff, #0056b3);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+
+        .card {
+            border-radius: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: scale(1.05);
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        .btn-custom {
+            background-color: #0056b3;
+            color: white;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-custom:hover {
+                background-color: #004085;
+            }
+
+        .container {
+            padding: 50px 0;
+        }
+
+        .no-questions {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #6c757d;
+            margin-top: 50px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Questões de @ViewBag.Categoria</h1>
+        <p>Explore as questões dessa categoria!</p>
+    </div>
+
+    <div class="container">
+        @if (Model != null && Model.Count > 0)
+        {
+            <div class="row text-center">
+                @foreach (var question in Model)
+                {
+                    <div class="col-md-4 d-flex">
+                        <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@question.Question</h5>
+                                <p class="card-text"><strong>Nível:</strong> @question.Level</p>
+                                <p class="card-text"><strong>Categoria:</strong> @question.Categorie</p>
+                                <p class="card-text"><strong>Alternativa Correta:</strong> @question.CorrectAlternative</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <p class="no-questions">Nenhuma questão encontrada para esta categoria.</p>
+        }
+    </div>
+
+    <div class="text-center mt-5">
+        <a class="btn btn-lg btn-custom" href="@Url.Action("Index", "Questions")">Voltar para o início</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

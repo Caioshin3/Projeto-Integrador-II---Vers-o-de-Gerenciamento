@@ -11,5 +11,6 @@ namespace Sistema_de_Armazenamento_de_Questões.Data
 
         public DbSet<QuestionModel> Questions { get; set; }
         public DbSet<UserModel> Users { get; set; }
+        public DbSet<ExamModel> Exams { get; set; }
     }
 }

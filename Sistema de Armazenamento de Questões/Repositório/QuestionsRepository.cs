@@ -16,6 +16,14 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
             return _bancoContext.Questions.FirstOrDefault(x => x.Id == id);
         }
 
+        public List<QuestionModel> BuscarPorCategoria(string categoria)
+        {
+            return _bancoContext.Questions
+                .Where(q => q.Categorie == categoria)
+                .ToList();
+        }
+
+
         public List<QuestionModel> BuscarTodos()
         {
             return _bancoContext.Questions.ToList();
@@ -39,7 +47,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
             questionDB.Question = questionAtua.Question;
             questionDB.Level = questionAtua.Level;
             questionDB.CorrectAlternative = questionAtua.CorrectAlternative;
-            questionDB.Discipline = questionAtua.Discipline;
+            questionDB.Categorie = questionAtua.Categorie;
 
             _bancoContext.Questions.Update(questionDB);
             _bancoContext.SaveChanges();
