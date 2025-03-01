@@ -124,43 +124,72 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
             return View(questionsView);
         }
 
-        [HttpPost]
+    [HttpPost]
+
         public IActionResult GenerateExamPdf(List<int> selectedQuestions, string examTitle)
         {
-            if (selectedQuestions == null || !selectedQuestions.Any())
+        if (selectedQuestions == null || !selectedQuestions.Any())
+        {
+            TempData["MensagemErro"] = "Nenhuma questão selecionada para a prova!";
+            return RedirectToAction("CreateExam");
+        }
+
+        List<QuestionModel> selectedQuestionsList = _questionRepository.BuscarTodos()
+            .Where(q => selectedQuestions.Contains(q.Id))
+            .ToList();
+
+        using (MemoryStream stream = new MemoryStream())
+        {
+            iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4, 50, 50, 50, 50);
+            PdfWriter.GetInstance(doc, stream);
+            doc.Open();
+
+            // Definir fontes
+            Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
+            Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
+            Font normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
+
+            // Cabeçalho
+            Paragraph title = new Paragraph($"Prova: {examTitle}", titleFont);
+            title.Alignment = Element.ALIGN_CENTER;
+            doc.Add(title);
+            doc.Add(new Paragraph("\n"));
+
+            PdfPTable headerTable = new PdfPTable(2);
+            headerTable.WidthPercentage = 100;
+            headerTable.SetWidths(new float[] { 70, 30 });
+
+            headerTable.AddCell(new PdfPCell(new Phrase("Nome do Aluno: ____________________", boldFont))
             {
-                TempData["MensagemErro"] = "Nenhuma questão selecionada para a prova!";
-                return RedirectToAction("CreateExam");
+                Border = Rectangle.NO_BORDER,
+                HorizontalAlignment = Element.ALIGN_LEFT
+            });
+
+            headerTable.AddCell(new PdfPCell(new Phrase($"Data: {DateTime.Now:dd/MM/yyyy}", boldFont))
+            {
+                Border = Rectangle.NO_BORDER,
+                HorizontalAlignment = Element.ALIGN_RIGHT
+            });
+
+            doc.Add(headerTable);
+            doc.Add(new Paragraph("\n"));
+
+            // Questões
+            int count = 1;
+            foreach (var question in selectedQuestionsList)
+            {
+                doc.Add(new Paragraph($"{count}. {question.Question}", normalFont));
+                doc.Add(new Paragraph("\n"));
+                count++;
             }
 
-            List<QuestionModel> selectedQuestionsList = _questionRepository.BuscarTodos()
-                .Where(q => selectedQuestions.Contains(q.Id))
-                .ToList();
+            doc.Close();
 
-            // Gerando PDF da prova
-            using (MemoryStream stream = new MemoryStream())
-            {
-                iTextSharp.text.Document doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4);
-                PdfWriter.GetInstance(doc, stream);
-                doc.Open();
-
-                doc.Add(new iTextSharp.text.Paragraph($"Prova: {examTitle}"));
-                doc.Add(new iTextSharp.text.Paragraph(" "));
-
-                int count = 1;
-                foreach (var question in selectedQuestionsList)
-                {
-                    doc.Add(new iTextSharp.text.Paragraph($"{count}. {question.Question}"));
-                    doc.Add(new iTextSharp.text.Paragraph(" "));
-                    count++;
-                }
-
-                doc.Close();
-
-                // Converte o stream em um array de bytes para download
-                byte[] fileBytes = stream.ToArray();
-                return File(fileBytes, "application/pdf", "Prova.pdf");
-            }
+            // Converte para array de bytes para download
+            byte[] fileBytes = stream.ToArray();
+            return File(fileBytes, "application/pdf", "Prova.pdf");
         }
     }
+
+}
 }

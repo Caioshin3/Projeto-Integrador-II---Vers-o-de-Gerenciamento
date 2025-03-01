@@ -16,9 +16,21 @@
         <label for="SelectLevel" class="form-label fw-bold text-primary">Nível da questão:</label>
         <select class="form-select border-primary shadow-sm" id="SelectLevel" asp-for="Level" required>
             <option value="" disabled>Selecione o nível</option>
-            <option value="Fácil" class="text-success">Matemática</option>
-            <option value="Médio" class="text-warning">Informática</option>
-            <option value="Difícil" class="text-danger"></option>
+            <option value="Fácil" class="text-success">Fácil</option>
+            <option value="Médio" class="text-warning">Médio</option>
+            <option value="Difícil" class="text-danger">Difícil</option>
+        </select>
+    </div>
+
+    <div class="mb-4">
+        <label for="SelectCategory" class="form-label fw-bold text-primary">Categoria da questão:</label>
+        <select class="form-select border-primary shadow-sm" id="SelectCategory" asp-for="Categorie" required>
+            <option value="" disabled>Selecione a categoria</option>
+            <option value="Matemática">Matemática</option>
+            <option value="Informática">Informática</option>
+            <option value="Ciências">Ciências</option>
+            <option value="História">História</option>
+            <option value="Geografia">Geografia</option>
         </select>
     </div>
 
@@ -45,9 +57,11 @@
     let minAlternatives = 2; // Número mínimo permitido
     let alternatives = []; // Armazena as alternativas carregadas
 
-    function loadQuestionData() {
+        function loadQuestionData() {
         const fullQuestion = `@Html.Raw(Json.Serialize(Model.Question))`.replace(/\r/g, "").split("\n");
         const correctAlternative = "@Model.CorrectAlternative";
+        const selectedLevel = "@Model.Level";
+        const selectedCategory = "@Model.Categorie";
 
         let mainQuestion = "";
         alternatives = [];
@@ -61,8 +75,14 @@
         });
 
         document.getElementById("InputQuestion").value = mainQuestion.trim();
+
+        // Garante que o nível e categoria sejam selecionados corretamente
+        document.querySelector(`#SelectLevel option[value="${selectedLevel}"]`)?.setAttribute("selected", "selected");
+        document.querySelector(`#SelectCategory option[value="${selectedCategory}"]`)?.setAttribute("selected", "selected");
+
         renderAlternatives(correctAlternative);
     }
+
 
     function renderAlternatives(correctAlternative) {
         const alternativesContainer = document.getElementById("alternativesContainer");

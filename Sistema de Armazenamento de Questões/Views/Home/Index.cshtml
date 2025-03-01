@@ -73,42 +73,50 @@
 
     <div class="container">
         <div class="row text-center">
-            <div class="col-md-4 d-flex">
-                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Matemática" })">
-                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                        <img src="https://w7.pngwing.com/pngs/524/374/png-transparent-multicolored-math-illustration-vedic-mathematics-euclidean-children-discuss-math-child-painted-text-thumbnail.png" class="img-animation" alt="Logo Matemática Infantil" data-animation="true">
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
+            <div class="col-md-4">
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Matemática" })" class="text-decoration-none">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded h-100">
+                        <img src="https://w7.pngwing.com/pngs/524/374/png-transparent-multicolored-math-illustration-vedic-mathematics-euclidean-children-discuss-math-child-painted-text-thumbnail.png"
+                             class="img-fluid img-animation"
+                             alt="Logo Matemática Infantil">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Matemática</h5>
                             <p class="card-text">Explore questões de matemática e muito mais!</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4 d-flex">
-                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Informática" })">
-                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjEO7xilqAr6N6m4GxrvQDH6n-XrCA26p9OgewhdXQRarrRG6TSjc-UXSipewrrmJpkDa1Zc7BHx3h_2ZoE9DpzCUhjOtStRtehmAnGfzMMejDAYr_Tg45KlIRrhCHvWZxMxOKN3UTN8Thf/s1600/1627912585622617-0.png" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
+
+            <div class="col-md-4">
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Informática" })" class="text-decoration-none">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded h-100">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjEO7xilqAr6N6m4GxrvQDH6n-XrCA26p9OgewhdXQRarrRG6TSjc-UXSipewrrmJpkDa1Zc7BHx3h_2ZoE9DpzCUhjOtStRtehmAnGfzMMejDAYr_Tg45KlIRrhCHvWZxMxOKN3UTN8Thf/s1600/1627912585622617-0.png"
+                             class="img-fluid img-animation"
+                             alt="Logo Informática Infantil">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Informática</h5>
                             <p class="card-text">Desafios para o aprendizado de Informática</p>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-md-4 d-flex">
-                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Portugol" })">
-                    <div class="card shadow-lg p-3 mb-5 bg-white rounded w-100">
-                        <img src="https://media.licdn.com/dms/image/v2/C5612AQEOW_aOybiE6A/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520204903899?e=2147483647&v=beta&t=onKTadAgd8HLASp3_fJK310VNuJxA_9uAV7ieCms4xU" class="img-animation" alt="Logo Informática Infantil" data-animation="true">
-                        <div class="card-body">
-                            <h5 class="card-title"></h5>
-                            <p class="card-text">Incentive a leitura com questões de algoritmos e portugol!</p>
+
+            <div class="col-md-4">
+                <a href="@Url.Action("QuestionDisplay", "Questions", new { categoria = "Portugol" })" class="text-decoration-none">
+                    <div class="card shadow-lg p-3 mb-5 bg-white rounded h-100">
+                        <img src="https://media.licdn.com/dms/image/v2/C5612AQEOW_aOybiE6A/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1520204903899?e=2147483647&v=beta&t=onKTadAgd8HLASp3_fJK310VNuJxA_9uAV7ieCms4xU"
+                             class="img-fluid img-animation"
+                             alt="Logo Portugol">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Portugol</h5>
+                            <p class="card-text">Incentive a leitura com questões de algoritmos e Portugol!</p>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
     </div>
+
 
     <div class="text-center mt-5">
         <a class="btn btn-lg btn-custom" href="@Url.Action("QuestionDisplay", "Questions")">Comece Agora</a>
