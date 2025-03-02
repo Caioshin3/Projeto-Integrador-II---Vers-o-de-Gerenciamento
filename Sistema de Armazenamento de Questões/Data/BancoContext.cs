@@ -12,5 +12,27 @@ namespace Sistema_de_Armazenamento_de_Questões.Data
         public DbSet<QuestionModel> Questions { get; set; }
         public DbSet<UserModel> Users { get; set; }
         public DbSet<ExamModel> Exams { get; set; }
+        public DbSet<ExamQuestion> ExamQuestions { get; set; }
+        public DbSet<StudentModel> Students { get; set; }
+        public DbSet<SchoolModel> Schools { get; set; }
+        public DbSet<StudentAnswerModel> StudentAnswers { get; set; }
+        public DbSet<StudentSchool> StudentSchools { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<StudentSchool>()
+                .HasKey(ss => new { ss.StudentId, ss.SchoolId }); // Definição da chave composta
+
+            modelBuilder.Entity<StudentSchool>()
+                .HasOne(ss => ss.Student)
+                .WithMany(s => s.StudentSchools)
+                .HasForeignKey(ss => ss.StudentId);
+
+            modelBuilder.Entity<StudentSchool>()
+                .HasOne(ss => ss.School)
+                .WithMany(s => s.StudentSchools)
+                .HasForeignKey(ss => ss.SchoolId);
+        }
+
     }
 }

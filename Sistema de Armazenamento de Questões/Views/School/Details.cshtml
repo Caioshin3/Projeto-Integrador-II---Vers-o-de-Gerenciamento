@@ -1,0 +1,22 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.SchoolModel
+
+@{
+    ViewData["Title"] = "Detalhes da Escola";
+}
+
+<h1>@Model.Name</h1>
+<p>Cidade: @Model.City</p>
+
+<h3>Alunos</h3>
+
+<ul>
+    @foreach (var studentSchool in ViewBag.Students)
+    {
+        <li>@studentSchool.Name</li>
+    }
+</ul>
+
+<p>
+    <a href="@Url.Action("Edit", new { id = Model.Id })">Editar</a> |
+    <a href="@Url.Action("Index")">Voltar</a>
+</p>

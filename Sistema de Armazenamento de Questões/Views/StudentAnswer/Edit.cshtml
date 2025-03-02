@@ -1,0 +1,38 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel
+
+@{
+    ViewData["Title"] = "Editar Resposta";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label for="StudentId">Aluno</label>
+        <select asp-for="StudentId" class="form-control" asp-items="@(new SelectList((IEnumerable<Sistema_de_Armazenamento_de_Questões.Models.StudentModel>)ViewData["Students"], "Id", "Name"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="ExamId">Exame</label>
+        <select asp-for="ExamId" class="form-control" asp-items="@(new SelectList((IEnumerable<Sistema_de_Armazenamento_de_Questões.Models.ExamModel>)ViewData["Exams"], "Id", "Name"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="QuestionId">Questão</label>
+        <select asp-for="QuestionId" class="form-control" asp-items="@(new SelectList((IEnumerable<Sistema_de_Armazenamento_de_Questões.Models.QuestionModel>)ViewData["Questions"], "Id", "Text"))"></select>
+    </div>
+
+    <div class="form-group">
+        <label for="GivenAnswer">Resposta Dada</label>
+        <textarea asp-for="GivenAnswer" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="IsCorrect">Correta?</label>
+        <input asp-for="IsCorrect" type="checkbox" class="form-check-input" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+</form>

@@ -15,7 +15,15 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Questions" asp-action="CreateExam">Criar Prova</a>
+            <a class="nav-link text-dark" asp-area="" asp-controller="Exam" asp-action="Index">Provas</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index">Alunos</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="School" asp-action="Index">Escolas</a>
         </li>
 
         @if (Model.Perfil == Sistema_de_Armazenamento_de_Questões.Enums.PerfilEnum.Admin)

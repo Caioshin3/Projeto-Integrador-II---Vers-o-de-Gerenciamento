@@ -4,7 +4,6 @@ using Sistema_de_Armazenamento_de_Questões.Helpter;
 using Sistema_de_Armazenamento_de_Questões.Repositório;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddEntityFrameworkSqlServer()
@@ -15,6 +14,9 @@ builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IQuestionsRepository, QuestionsRepository>();
 builder.Services.AddScoped<IExamRepository, ExamRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+builder.Services.AddScoped<ISchoolRepository, SchoolRepository>();
+builder.Services.AddScoped<IStudentSchoolRepository, StudentSchoolRepository>();
 builder.Services.AddScoped<ISessao, Sessao>();
 
 builder.Services.AddSession(o =>

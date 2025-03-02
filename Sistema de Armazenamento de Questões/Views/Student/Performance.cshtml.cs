@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Sistema_de_Armazenamento_de_Questões.Views.Questions
+namespace Sistema_de_Armazenamento_de_Questões.Views.Student
 {
-    public class CreateExamModel : PageModel
+    public class PerformanceModel : PageModel
     {
         public void OnGet()
         {

@@ -15,12 +15,10 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
     public class QuestionsController : Controller
     {
         private readonly IQuestionsRepository _questionRepository;
-        private readonly IExamRepository _examRepository;
 
         public QuestionsController(IQuestionsRepository questionsRepository, IExamRepository examRepository)
         {
             _questionRepository = questionsRepository;
-            _examRepository = examRepository;
         }
 
         public IActionResult Index()
@@ -118,78 +116,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
         }
 
         // 🔹 Criar uma Prova Selecionando Questões
-        public IActionResult CreateExam()
-        {
-            List<QuestionModel> questionsView = _questionRepository.BuscarTodos();
-            return View(questionsView);
-        }
-
-    [HttpPost]
-
-        public IActionResult GenerateExamPdf(List<int> selectedQuestions, string examTitle)
-        {
-        if (selectedQuestions == null || !selectedQuestions.Any())
-        {
-            TempData["MensagemErro"] = "Nenhuma questão selecionada para a prova!";
-            return RedirectToAction("CreateExam");
-        }
-
-        List<QuestionModel> selectedQuestionsList = _questionRepository.BuscarTodos()
-            .Where(q => selectedQuestions.Contains(q.Id))
-            .ToList();
-
-        using (MemoryStream stream = new MemoryStream())
-        {
-            iTextSharp.text.Document doc = new iTextSharp.text.Document(PageSize.A4, 50, 50, 50, 50);
-            PdfWriter.GetInstance(doc, stream);
-            doc.Open();
-
-            // Definir fontes
-            Font titleFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 16);
-            Font boldFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
-            Font normalFont = FontFactory.GetFont(FontFactory.HELVETICA, 12);
-
-            // Cabeçalho
-            Paragraph title = new Paragraph($"Prova: {examTitle}", titleFont);
-            title.Alignment = Element.ALIGN_CENTER;
-            doc.Add(title);
-            doc.Add(new Paragraph("\n"));
-
-            PdfPTable headerTable = new PdfPTable(2);
-            headerTable.WidthPercentage = 100;
-            headerTable.SetWidths(new float[] { 70, 30 });
-
-            headerTable.AddCell(new PdfPCell(new Phrase("Nome do Aluno: ____________________", boldFont))
-            {
-                Border = Rectangle.NO_BORDER,
-                HorizontalAlignment = Element.ALIGN_LEFT
-            });
-
-            headerTable.AddCell(new PdfPCell(new Phrase($"Data: {DateTime.Now:dd/MM/yyyy}", boldFont))
-            {
-                Border = Rectangle.NO_BORDER,
-                HorizontalAlignment = Element.ALIGN_RIGHT
-            });
-
-            doc.Add(headerTable);
-            doc.Add(new Paragraph("\n"));
-
-            // Questões
-            int count = 1;
-            foreach (var question in selectedQuestionsList)
-            {
-                doc.Add(new Paragraph($"{count}. {question.Question}", normalFont));
-                doc.Add(new Paragraph("\n"));
-                count++;
-            }
-
-            doc.Close();
-
-            // Converte para array de bytes para download
-            byte[] fileBytes = stream.ToArray();
-            return File(fileBytes, "application/pdf", "Prova.pdf");
-        }
-    }
+        
 
 }
 }

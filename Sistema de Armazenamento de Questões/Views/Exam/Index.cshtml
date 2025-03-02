@@ -1,0 +1,63 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.ExamModel>
+
+@{
+    ViewData["Title"] = "Lista de Provas";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Alerta de Sucesso ou Erro -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Data de Criação</th>
+            <th>Respostas dos Alunos</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var exam in Model)
+        {
+            <tr>
+                <td>@exam.Title</td>
+                <td>@exam.Description</td>
+                <td>@exam.CreatedAt.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <!-- Link para visualizar as respostas dos alunos -->
+                    <a asp-controller="StudentAnswer" asp-action="Index" asp-route-examId="@exam.Id" class="btn btn-info">
+                        Ver Respostas
+                    </a>
+                </td>
+                <td>
+                    <!-- Link para registrar a resposta -->
+                    <a asp-controller="StudentAnswer" asp-action="Create" asp-route-examId="@exam.Id" class="btn btn-success">
+                        Registrar Resposta
+                    </a>
+
+                    <!-- Link para gerar o PDF da prova -->
+                    <a asp-controller="Exam" asp-action="GenerateExamPdf" asp-route-id="@exam.Id" class="btn btn-warning">
+                        Gerar PDF
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Botão para criar nova prova -->
+<a asp-controller="Exam" asp-action="Create" class="btn btn-primary mt-3">Criar Nova Prova</a>

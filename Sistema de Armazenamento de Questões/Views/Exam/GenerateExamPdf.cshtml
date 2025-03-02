@@ -1,0 +1,31 @@
+﻿@model ExamModel
+
+@{
+    ViewData["Title"] = "Gerar PDF da Prova";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary">Gerar PDF da Prova</h2>
+    <hr>
+
+    <h4>@Model.Title</h4>
+
+    <form asp-controller="Exam" asp-action="GenerateExamPdf" method="post">
+        <p class="text-muted">Você está prestes a gerar o PDF para a prova @Model.Title.</p>
+
+        <div class="list-group mb-3">
+            @foreach (var question in Model.Questions)
+            {
+                <div class="list-group-item list-group-item-action">
+                    <h5 class="fw-bold">@question.Question</h5>
+                    <p class="mb-1 text-muted">Nível: <span class="fw-semibold">@question.Level</span></p>
+                </div>
+            }
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Gerar PDF</button>
+            <a asp-controller="Exam" asp-action="Index" class="btn btn-secondary">Voltar</a>
+        </div>
+    </form>
+</div>

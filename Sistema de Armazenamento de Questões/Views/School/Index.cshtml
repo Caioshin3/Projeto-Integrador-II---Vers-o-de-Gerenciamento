@@ -1,0 +1,50 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.SchoolModel>
+
+@{
+    ViewData["Title"] = "Lista de Escolas";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Cadastrar Nova Escola</a>
+</p>
+
+<!-- Mensagens de sucesso ou erro -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+else if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Cidade</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var school in Model)
+        {
+            <tr>
+                <td>@school.Name</td>
+                <td>@school.City</td>
+                <td>
+                    <a href="@Url.Action("Details", new { id = school.Id })" class="btn btn-info btn-sm">Detalhes</a>
+                    <a href="@Url.Action("Edit", new { id = school.Id })" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="@Url.Action("Delete", new { id = school.Id })" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Tem certeza que deseja excluir esta escola?');">Deletar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

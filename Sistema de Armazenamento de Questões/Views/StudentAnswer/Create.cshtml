@@ -1,0 +1,47 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel>
+
+@{
+    ViewData["Title"] = "Respostas dos Alunos";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Aluno</th>
+            <th>Exame</th>
+            <th>Questão</th>
+            <th>Resposta Dada</th>
+            <th>Correta</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var answer in Model)
+        {
+            <tr>
+                <td>@answer.Student.Name</td>
+                <td>@answer.Exam.Title</td>
+                <td>@answer.Question.Question</td>
+                <td>@answer.GivenAnswer</td>
+                <td>
+                    @if (answer.IsCorrect)
+                    {
+                        <span class="text-success">Correta</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Errada</span>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = answer.Id })" class="btn btn-primary">Editar</a>
+                    <a href="@Url.Action("Delete", new { id = answer.Id })" class="btn btn-danger">Excluir</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create", new { examId = ViewData["ExamId"] })" class="btn btn-success">Adicionar Resposta</a>

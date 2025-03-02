@@ -1,0 +1,45 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel>
+
+@{
+    ViewData["Title"] = "Desempenho do Aluno";
+}
+
+<div class="text-center py-4 bg-primary text-white rounded">
+    <h1 class="display-4">Desempenho do Aluno</h1>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered table-striped mt-4 shadow-sm">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>Questão</th>
+                <th>Resposta Dada</th>
+                <th>Correta?</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var answer in Model)
+            {
+                <tr>
+                    <td>@(answer.Question != null ? answer.Question.Question : "Questão não encontrada")</td>
+                    <td>@answer.GivenAnswer</td>
+                    <td class="text-center">
+                        @if (answer.IsCorrect)
+                        {
+                            <span class="badge bg-success">Sim</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Não</span>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted text-center mt-4">Nenhuma resposta encontrada para este aluno.</p>
+}

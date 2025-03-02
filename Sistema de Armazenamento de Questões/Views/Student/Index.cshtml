@@ -1,0 +1,54 @@
+﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.StudentModel>
+
+@{
+    ViewData["Title"] = "Lista de Alunos";
+}
+
+<h1>Lista de Alunos</h1>
+
+<p>
+    <a href="@Url.Action("CreateStudent", "Student")" class="btn btn-success">Cadastrar Novo Aluno</a>
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning" role="alert">
+        Nenhum aluno cadastrado.
+    </div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Data de Nascimento</th>
+                <th>Ano Escolar</th>
+                <th>Escola</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var student in Model)
+            {
+                <tr>
+                    <td>@student.Id</td>
+                    <td>@student.Name</td>
+                    <td>@student.BirthDate.ToString("dd/MM/yyyy")</td>
+                    <td>@student.schoolYear</td>
+                    <td>
+                        @{
+                            Func<Sistema_de_Armazenamento_de_Questões.Models.SchoolModel, bool> predicate = s => s.Id == student.Id;
+                            var school = ViewBag.Schools?.FirstOrDefault(predicate);
+                            @school?.Name
+                        }
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Performance", "Student", new { studentId = student.Id, examId = 1 })" class="btn btn-info btn-sm">Ver Performance</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

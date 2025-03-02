@@ -1,0 +1,16 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.SchoolModel
+
+<h1>Editar Escola</h1>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="Id" value="@Model.Id" />
+    <div class="form-group">
+        <label for="Name">Nome</label>
+        <input type="text" id="Name" name="Name" class="form-control" value="@Model.Name" required />
+    </div>
+    <div class="form-group">
+        <label for="City">Cidade</label>
+        <input type="text" id="City" name="City" class="form-control" value="@Model.City" required />
+    </div>
+    <button type="submit" class="btn btn-warning">Atualizar Escola</button>
+</form>

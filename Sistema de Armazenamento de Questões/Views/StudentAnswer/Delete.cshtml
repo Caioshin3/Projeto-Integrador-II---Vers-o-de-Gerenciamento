@@ -1,0 +1,23 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel
+
+@{
+    ViewData["Title"] = "Excluir Resposta";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Tem certeza que deseja excluir a resposta?</h3>
+
+<div>
+    <p><strong>Aluno:</strong> @Model.Student.Name</p>
+    <p><strong>Exame:</strong> @Model.Exam.Title</p>
+    <p><strong>Questão:</strong> @Model.Question.Question</p>
+    <p><strong>Resposta Dada:</strong> @Model.GivenAnswer</p>
+    <p><strong>Correta:</strong> @(Model.IsCorrect ? "Sim" : "Não")</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+</form>

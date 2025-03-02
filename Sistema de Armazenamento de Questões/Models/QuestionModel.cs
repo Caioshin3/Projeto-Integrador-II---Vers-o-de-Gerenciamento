@@ -11,5 +11,8 @@
         public string Categorie { get; set; }
 
         public string CorrectAlternative { get; set; }
+
+        public int? ExamModelId { get; set; }
+        public ExamModel? ExamModel { get; set; }
     }
 }
