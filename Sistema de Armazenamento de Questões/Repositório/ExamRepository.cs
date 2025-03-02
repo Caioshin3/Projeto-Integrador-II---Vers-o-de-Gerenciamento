@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Sistema_de_Armazenamento_de_Questões.Data;
+using Sistema_de_Armazenamento_de_Questões.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Sistema_de_Armazenamento_de_Questões.Data;
-using Sistema_de_Armazenamento_de_Questões.Models;
-using Sistema_de_Armazenamento_de_Questões.Repositório;
 
 namespace Sistema_de_Armazenamento_de_Questões.Repositório
 {
@@ -17,33 +15,27 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
             _context = context;
         }
 
-        public void CreateExam(ExamModel exam, List<int> questionIds)
+        public List<ExamModel> GetAllExams()
         {
-            _context.Exams.Add(exam);
-            _context.SaveChanges();
-
-            foreach (var questionId in questionIds)
-            {
-                _context.ExamQuestions.Add(new ExamQuestion
-                {
-                    ExamId = exam.Id,
-                    QuestionId = questionId
-                });
-            }
-
-            _context.SaveChanges();
+            return _context.Exams
+                .Include(e => e.ExamQuestions)  // Carregar questões relacionadas
+                .ThenInclude(eq => eq.Question)  // Carregar questões associadas
+                .ToList();
         }
 
         public ExamModel GetExamById(int id)
         {
             return _context.Exams
-                .Include(e => e.Questions)
+                .Include(e => e.ExamQuestions)  // Carregar as questões associadas
+                .ThenInclude(eq => eq.Question)  // Carregar as questões
                 .FirstOrDefault(e => e.Id == id);
         }
 
-        public List<ExamModel> GetAllExams()
+        public void CreateExam(ExamModel exam)
         {
-            return _context.Exams.Include(e => e.Questions).ToList();
+            // Criação da prova
+            _context.Exams.Add(exam);
+            _context.SaveChanges();  // Salvar no banco de dados
         }
     }
 }

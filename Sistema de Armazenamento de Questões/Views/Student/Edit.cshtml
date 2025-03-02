@@ -1,0 +1,28 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.StudentModel
+@{
+    ViewData["Title"] = "Editar Aluno";
+}
+
+<h2>Editar Aluno</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Nome</label>
+        <input asp-for="Name" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label for="SchoolId" class="form-label">Escola</label>
+        <select name="SchoolId" class="form-select">
+            @foreach (var school in ViewBag.Schools)
+            {
+                <option value="@school.Id">@school.Name</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

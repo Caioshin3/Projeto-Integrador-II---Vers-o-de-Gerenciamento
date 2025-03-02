@@ -2,44 +2,246 @@
 
 @{
     ViewData["Title"] = "Desempenho do Aluno";
+    var studentId = Model.FirstOrDefault()?.StudentId ?? 0;
+    var selectedExamId = ViewData["SelectedExamId"] as int?;
 }
 
 <div class="text-center py-4 bg-primary text-white rounded">
     <h1 class="display-4">Desempenho do Aluno</h1>
 </div>
 
-@if (Model != null && Model.Any())
+<!-- Dropdown para seleção do exame -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <label for="examSelect">Selecione um Exame:</label>
+            <select id="examSelect" class="form-control" onchange="changeExam()">
+                @if (ViewData["StudentExams"] != null)
+                {
+                    var exams = ViewData["StudentExams"] as List<Sistema_de_Armazenamento_de_Questões.Models.ExamModel>;
+
+                    if (exams != null)
+                    {
+                        @foreach (var exam in exams)
+                        {
+                            <option value="@exam.Id" selected="@(exam.Id == selectedExamId ? "selected" : null)">
+                                @exam.Title
+                            </option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="chartType">Tipo de Gráfico:</label>
+            <select id="chartType" class="form-control" onchange="updateChartType()">
+                <option value="bar">Gráfico de Barras</option>
+                <option value="line" selected>Gráfico de Linha</option>
+                <option value="radar">Gráfico Radar</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- Canvas para o gráfico -->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <canvas id="performanceChart" width="400" height="250"></canvas>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Resumo de Desempenho</h5>
+                </div>
+                <div class="card-body">
+                    <div id="performanceSummary">
+                        <p>Selecione um exame para ver o resumo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (ViewData["PerformanceData"] != null)
 {
-    <table class="table table-bordered table-striped mt-4 shadow-sm">
-        <thead class="bg-primary text-white">
-            <tr>
-                <th>Questão</th>
-                <th>Resposta Dada</th>
-                <th>Correta?</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var answer in Model)
-            {
-                <tr>
-                    <td>@(answer.Question != null ? answer.Question.Question : "Questão não encontrada")</td>
-                    <td>@answer.GivenAnswer</td>
-                    <td class="text-center">
-                        @if (answer.IsCorrect)
-                        {
-                            <span class="badge bg-success">Sim</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Não</span>
-                        }
-                    </td>
-                </tr>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('performanceChart').getContext('2d');
+        var performanceChart;
+
+        // Obtendo os dados de desempenho passados via ViewData
+        var performanceData = @Html.Raw(Json.Serialize(ViewData["PerformanceData"]));
+
+        // Arrays para os dados do gráfico
+        var labels = [];
+        var correctAnswers = [];
+        var totalAnswers = [];
+        var percentages = [];
+
+        // Processando os dados
+        if (performanceData && Array.isArray(performanceData) && performanceData.length > 0) {
+            performanceData.forEach(function(item) {
+                if (item && typeof item === 'object') {
+                    var categorieLabel = item.categorie || item.Categorie || "Sem categoria";
+                    var levelLabel = item.level || item.Level || "Sem nível";
+                    var correctValue = item.correct ?? item.Correct ?? 0;
+                    var totalValue = item.total ?? item.Total ?? 0;
+
+                    labels.push(categorieLabel + " - " + levelLabel);
+                    correctAnswers.push(correctValue);
+                    totalAnswers.push(totalValue);
+
+                    // Calculando a porcentagem de acerto
+                    var percentage = totalValue > 0 ? (correctValue / totalValue) * 100 : 0;
+                    percentages.push(percentage.toFixed(1));
+                }
+            });
+        } else {
+            labels = ["Sem dados"];
+            correctAnswers = [0];
+            totalAnswers = [0];
+            percentages = [0];
+        }
+
+        // Função para atualizar o resumo de desempenho
+        function updateSummary() {
+            var totalCorrect = correctAnswers.reduce((a, b) => a + b, 0);
+            var totalQuestions = totalAnswers.reduce((a, b) => a + b, 0);
+            var overallPercentage = totalQuestions > 0 ? (totalCorrect / totalQuestions) * 100 : 0;
+
+            var bestCategoryIndex = percentages.indexOf(Math.max(...percentages.map(Number)));
+            var worstCategoryIndex = percentages.indexOf(Math.min(...percentages.map(Number)));
+
+            var summaryHTML = `
+                <p><strong>Total de Questões:</strong> ${totalQuestions}</p>
+                <p><strong>Respostas Corretas:</strong> ${totalCorrect}</p>
+                <p><strong>Percentual de Acerto:</strong> ${overallPercentage.toFixed(1)}%</p>
+                <hr>
+                <p><strong>Melhor Categoria:</strong><br> ${labels[bestCategoryIndex] || 'N/A'} (${percentages[bestCategoryIndex] || 0}%)</p>
+                <p><strong>Categoria para Melhorar:</strong><br> ${labels[worstCategoryIndex] || 'N/A'} (${percentages[worstCategoryIndex] || 0}%)</p>
+            `;
+
+            document.getElementById('performanceSummary').innerHTML = summaryHTML;
+        }
+
+        // Função para criar/atualizar o gráfico
+        function createChart(type) {
+            // Destruir gráfico existente se houver
+            if (performanceChart) {
+                performanceChart.destroy();
             }
-        </tbody>
-    </table>
+
+            var datasets = [];
+
+            if (type === 'line') {
+                datasets = [{
+                    label: 'Percentual de Acerto (%)',
+                    data: percentages,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }];
+            } else if (type === 'radar') {
+                datasets = [{
+                    label: 'Percentual de Acerto (%)',
+                    data: percentages,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2,
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)'
+                }];
+            } else { // bar chart (default)
+                datasets = [{
+                    label: 'Respostas Corretas',
+                    data: correctAnswers,
+                    backgroundColor: 'rgba(40, 167, 69, 0.5)',
+                    borderColor: 'rgba(40, 167, 69, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Respostas Totais',
+                    data: totalAnswers,
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }];
+            }
+
+            performanceChart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return type === 'line' || type === 'radar' ? value + '%' : value;
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.dataset.label || '';
+                                    var value = context.parsed.y;
+
+                                    if (type === 'line' || type === 'radar') {
+                                        return label + ': ' + value + '%';
+                                    } else {
+                                        var categoryIndex = context.dataIndex;
+                                        var correctCount = correctAnswers[categoryIndex];
+                                        var totalCount = totalAnswers[categoryIndex];
+
+                                        if (label === 'Respostas Corretas') {
+                                            return label + ': ' + correctCount + ' (' + percentages[categoryIndex] + '%)';
+                                        } else {
+                                            return label + ': ' + totalCount;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            updateSummary();
+        }
+
+        // Inicializar com gráfico de linha
+        createChart('line');
+
+        // Função para atualizar o tipo de gráfico
+        function updateChartType() {
+            var selectedType = document.getElementById('chartType').value;
+            createChart(selectedType);
+        }
+
+        // Função para mudar o exame via dropdown
+        function changeExam() {
+            var selectedExam = document.getElementById("examSelect").value;
+            window.location.href = '@Url.Action("Performance", "Student")?studentId=@studentId&examId=' + selectedExam;
+        }
+    </script>
 }
-else
+
+@if (Model == null || !Model.Any())
 {
-    <p class="text-muted text-center mt-4">Nenhuma resposta encontrada para este aluno.</p>
+    <div class="alert alert-info text-center mt-4">
+        <i class="fas fa-info-circle mr-2"></i> Nenhuma resposta encontrada para este aluno.
+    </div>
 }

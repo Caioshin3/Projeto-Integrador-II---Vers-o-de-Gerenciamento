@@ -1,47 +1,59 @@
-﻿@model List<Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel>
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel
 
 @{
-    ViewData["Title"] = "Respostas dos Alunos";
+    ViewData["Title"] = "Adicionar Resposta";
 }
 
-<h1>@ViewData["Title"]</h1>
+<h2 class="mb-4">@ViewData["Title"] - @ViewData["ExamTitle"]</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Aluno</th>
-            <th>Exame</th>
-            <th>Questão</th>
-            <th>Resposta Dada</th>
-            <th>Correta</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var answer in Model)
-        {
-            <tr>
-                <td>@answer.Student.Name</td>
-                <td>@answer.Exam.Title</td>
-                <td>@answer.Question.Question</td>
-                <td>@answer.GivenAnswer</td>
-                <td>
-                    @if (answer.IsCorrect)
-                    {
-                        <span class="text-success">Correta</span>
-                    }
-                    else
-                    {
-                        <span class="text-danger">Errada</span>
-                    }
-                </td>
-                <td>
-                    <a href="@Url.Action("Edit", new { id = answer.Id })" class="btn btn-primary">Editar</a>
-                    <a href="@Url.Action("Delete", new { id = answer.Id })" class="btn btn-danger">Excluir</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            <!-- Campo oculto para ExamId -->
+            <input type="hidden" asp-for="ExamId" />
 
-<a href="@Url.Action("Create", new { examId = ViewData["ExamId"] })" class="btn btn-success">Adicionar Resposta</a>
+            <div class="mb-3">
+                <label asp-for="StudentId" class="form-label">Aluno</label>
+                <select asp-for="StudentId" class="form-select" asp-items="@(ViewData["Students"] as SelectList)">
+                    <option value="">Selecione um aluno</option>
+                </select>
+                <span asp-validation-for="StudentId" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="QuestionId" class="form-label">Questão</label>
+                <select asp-for="QuestionId" class="form-select" asp-items="@(ViewData["Questions"] as SelectList)">
+                    <option value="">Selecione uma questão</option>
+                </select>
+                <span asp-validation-for="QuestionId" class="text-danger"></span>
+            </div>
+
+            <!-- Seletor de alternativa escolhida pelo aluno -->
+            <div class="mb-3">
+                <label class="form-label">Alternativa Selecionada pelo Aluno</label>
+                <select class="form-select" asp-for="GivenAnswer">
+                    <option value="">Selecione a alternativa do aluno</option>
+                    @foreach (var alternative in ViewData["Alternatives"] as List<string>)
+                    {
+                        <option value="@alternative">@alternative</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Exibindo a alternativa correta -->
+            <div class="mb-3">
+                <label class="form-label">Alternativa Correta</label>
+                <input type="text" class="form-control" value="@ViewData["CorrectAnswer"]" readonly />
+            </div>
+
+            <button type="submit" class="btn btn-success">Salvar Resposta</button>
+            <a asp-action="Index" asp-route-examId="@ViewData["ExamId"]" class="btn btn-secondary">Voltar</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

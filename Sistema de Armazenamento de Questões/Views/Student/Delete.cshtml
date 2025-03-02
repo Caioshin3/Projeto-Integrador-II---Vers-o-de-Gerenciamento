@@ -1,0 +1,15 @@
+﻿@model Sistema_de_Armazenamento_de_Questões.Models.StudentModel
+@{
+    ViewData["Title"] = "Excluir Aluno";
+}
+
+<h2>Tem certeza que deseja excluir este aluno?</h2>
+
+<p><strong>Nome:</strong> @Model.Name</p>
+<p><strong>Idade:</strong> @Model.schoolYear</p>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Excluir</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

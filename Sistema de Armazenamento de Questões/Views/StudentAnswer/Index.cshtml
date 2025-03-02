@@ -1,38 +1,74 @@
 ﻿@model IEnumerable<Sistema_de_Armazenamento_de_Questões.Models.StudentAnswerModel>
-
 @{
     ViewData["Title"] = "Respostas dos Alunos";
+    var examId = ViewData["ExamId"] as int?;
+    var examTitle = ViewData["ExamTitle"] as string;
 }
 
-<h1>@ViewData["Title"]</h1>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Respostas dos Alunos - @examTitle</h1>
+    <a asp-controller="Exam" asp-action="Index" class="btn btn-secondary">Voltar para Provas</a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Aluno</th>
-            <th>Exame</th>
-            <th>Questão</th>
-            <th>Resposta Dada</th>
-            <th>Correta</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var answer in Model)
-        {
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>@answer.Student.Name</td>
-                <td>@answer.Exam.Title</td>
-                <td>@answer.Question.Question</td>
-                <td>@answer.GivenAnswer</td>
-                <td>@answer.IsCorrect</td>
-                <td>
-                    <a href="@Url.Action("Edit", new { id = answer.Id })" class="btn btn-primary">Editar</a>
-                    <a href="@Url.Action("Delete", new { id = answer.Id })" class="btn btn-danger">Excluir</a>
-                </td>
+                <th>Aluno</th>
+                <th>Questão</th>
+                <th>Resposta Dada</th>
+                <th>Correta</th>
+                <th>Ações</th>
             </tr>
-        }
-    </tbody>
-</table>
-
-<a href="@Url.Action("Create")" class="btn btn-success">Adicionar Resposta</a>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Any())
+            {
+                @foreach (var answer in Model)
+                {
+                    <tr>
+                        <td>@answer.Student?.Name</td>
+                        <td>@answer.Question?.Question</td>
+                        <td>@answer.GivenAnswer</td>
+                        <td>
+                            @if (answer.IsCorrect.HasValue && answer.IsCorrect.Value)
+                            {
+                                <span class="badge bg-success">Sim</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Não</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@answer.Id" class="btn btn-sm btn-primary">Editar</a>
+                                <a asp-action="Delete" asp-route-id="@answer.Id" class="btn btn-sm btn-danger">Excluir</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center">Nenhuma resposta registrada para esta prova.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

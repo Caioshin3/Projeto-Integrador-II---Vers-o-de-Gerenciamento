@@ -2,8 +2,10 @@
 {
     public class ExamQuestion
     {
-        public int ExamQuestionId { get; set; }
         public int ExamId { get; set; }
+        public ExamModel Exam { get; set; }
+
         public int QuestionId { get; set; }
+        public QuestionModel Question { get; set; }
     }
 }

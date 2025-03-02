@@ -6,6 +6,7 @@ using iTextSharp.text.pdf;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Sistema_de_Armazenamento_de_Questões.Controllers
 {
@@ -13,19 +14,23 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
     {
         private readonly IExamRepository _examRepo;
         private readonly IQuestionsRepository _questionRepo;
+        private readonly IExamQuestionRepository _examQuestionRepo;
 
-        public ExamController(IExamRepository examRepo, IQuestionsRepository questionRepo)
+        public ExamController(IExamRepository examRepo, IQuestionsRepository questionRepo, IExamQuestionRepository examQuestionRepo)
         {
             _examRepo = examRepo;
             _questionRepo = questionRepo;
+            _examQuestionRepo = examQuestionRepo;
         }
 
+        // Ação para listar todas as provas
         public IActionResult Index()
         {
             var exams = _examRepo.GetAllExams();
             return View(exams);
         }
 
+        // Ação para visualizar detalhes de uma prova
         public IActionResult Details(int id)
         {
             var exam = _examRepo.GetExamById(id);
@@ -33,37 +38,68 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
             return View(exam);
         }
 
+        // Ação para exibir o formulário de criação de uma nova prova
         public IActionResult Create()
         {
             var model = new ExamModel
             {
-                // Exemplo de adição de questões ao modelo. Isso pode ser feito conforme necessário.
-                Questions = _questionRepo.BuscarTodos() // Supondo que você tenha uma lógica para obter todas as questões
+                // Carregar todas as questões para seleção ao criar uma prova
+                ExamQuestions = _questionRepo.BuscarTodos().Select(q => new ExamQuestion
+                {
+                    QuestionId = q.Id,
+                    Question = q // Associando a questão ao modelo de exame
+                }).ToList()
             };
             return View(model);
         }
 
-
+        // Ação para processar a criação de uma nova prova
         [HttpPost]
-        public IActionResult Create(ExamModel exam, List<int> QuestionIds)
+        public IActionResult Create(ExamModel exam, List<int>? QuestionIds)
         {
             try
             {
-                _examRepo.CreateExam(exam, QuestionIds);
+                if (QuestionIds == null || !QuestionIds.Any())
+                {
+                    TempData["ErrorMessage"] = "A prova deve conter pelo menos uma questão.";
+                    exam.ExamQuestions = _questionRepo.BuscarTodos().Select(q => new ExamQuestion
+                    {
+                        QuestionId = q.Id,
+                        Question = q
+                    }).ToList();
+                    return View(exam);
+                }
+
+                // Criando a prova
+                _examRepo.CreateExam(exam);
+
+                // Adicionando as questões à prova usando o repositório
+                _examQuestionRepo.AddQuestionsToExam(exam.Id, QuestionIds);
+
                 TempData["SuccessMessage"] = "Prova criada com sucesso!";
+                return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                TempData["ErrorMessage"] = "Ocorreu um erro ao criar a prova.";
+                TempData["ErrorMessage"] = $"Erro ao criar a prova: {ex.Message}";
+                exam.ExamQuestions = _questionRepo.BuscarTodos().Select(q => new ExamQuestion
+                {
+                    QuestionId = q.Id,
+                    Question = q
+                }).ToList();
+                return View(exam);
             }
-            return RedirectToAction("Index");
         }
 
 
+        // Ação para gerar o PDF da prova
         public IActionResult GenerateExamPdf(int id)
         {
             var exam = _examRepo.GetExamById(id);
             if (exam == null) return NotFound();
+
+            // Usando o repositório para obter as questões associadas à prova
+            var questions = _examQuestionRepo.GetQuestionsByExamId(id);
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -78,7 +114,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
                 doc.Add(new Paragraph("\n"));
 
                 int count = 1;
-                foreach (var question in exam.Questions)
+                foreach (var question in questions)
                 {
                     doc.Add(new Paragraph($"{count}. {question.Question}", normalFont));
                     doc.Add(new Paragraph("\n"));

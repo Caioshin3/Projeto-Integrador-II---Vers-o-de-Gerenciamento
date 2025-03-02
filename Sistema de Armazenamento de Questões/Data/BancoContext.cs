@@ -32,7 +32,20 @@ namespace Sistema_de_Armazenamento_de_Questões.Data
                 .HasOne(ss => ss.School)
                 .WithMany(s => s.StudentSchools)
                 .HasForeignKey(ss => ss.SchoolId);
-        }
 
+            // Relacionamento entre ExamModel e QuestionModel via a entidade de junção ExamQuestion
+            modelBuilder.Entity<ExamQuestion>()
+                .HasKey(eq => new { eq.ExamId, eq.QuestionId }); // Chave composta
+
+            modelBuilder.Entity<ExamQuestion>()
+                .HasOne(eq => eq.Exam)
+                .WithMany(e => e.ExamQuestions)
+                .HasForeignKey(eq => eq.ExamId);
+
+            modelBuilder.Entity<ExamQuestion>()
+                .HasOne(eq => eq.Question)
+                .WithMany(q => q.ExamQuestions)
+                .HasForeignKey(eq => eq.QuestionId);
+        }
     }
 }

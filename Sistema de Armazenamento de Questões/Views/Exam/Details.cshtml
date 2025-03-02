@@ -10,10 +10,10 @@
 
 <h2>Questões</h2>
 <ul>
-    @foreach (var question in Model.Questions)
+    @foreach (var examQuestion in Model.ExamQuestions)
     {
-        <li>@question.Question</li>
+        <li>@examQuestion.Question.Question</li>
     }
 </ul>
 
-<a asp-controller="Exam" asp-action="Details" class="btn btn-secondary">Voltar</a>
+<a asp-controller="Exam" asp-action="Index" class="btn btn-secondary">Voltar</a>

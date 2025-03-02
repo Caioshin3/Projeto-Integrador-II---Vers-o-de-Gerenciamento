@@ -14,6 +14,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Repositório
         void AddStudentToSchool(int studentId, int schoolId);
         void RemoveStudentFromSchool(int studentId, int schoolId);
         List<SchoolModel> GetAllSchoolsWithStudents();
+        List<StudentModel> GetStudentsBySchool(int schoolId);
 
     }
 }

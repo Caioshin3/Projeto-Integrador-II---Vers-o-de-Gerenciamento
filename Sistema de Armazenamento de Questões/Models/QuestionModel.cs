@@ -3,16 +3,10 @@
     public class QuestionModel
     {
         public int Id { get; set; }
-
         public string Question{ get; set; }
-
         public string Level { get; set; }
-
         public string Categorie { get; set; }
-
         public string CorrectAlternative { get; set; }
-
-        public int? ExamModelId { get; set; }
-        public ExamModel? ExamModel { get; set; }
+        public List<ExamQuestion>? ExamQuestions { get; set; } = new List<ExamQuestion>();
     }
 }

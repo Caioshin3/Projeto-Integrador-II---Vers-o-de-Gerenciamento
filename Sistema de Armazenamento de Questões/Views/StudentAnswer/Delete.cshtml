@@ -13,7 +13,7 @@
     <p><strong>Exame:</strong> @Model.Exam.Title</p>
     <p><strong>Questão:</strong> @Model.Question.Question</p>
     <p><strong>Resposta Dada:</strong> @Model.GivenAnswer</p>
-    <p><strong>Correta:</strong> @(Model.IsCorrect ? "Sim" : "Não")</p>
+    <p><strong>Correta:</strong> @(Model.IsCorrect.HasValue && Model.IsCorrect.Value ? "Sim" : "Não")</p>
 </div>
 
 <form asp-action="Delete" method="post">

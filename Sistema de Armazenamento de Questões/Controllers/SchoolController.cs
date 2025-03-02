@@ -23,7 +23,7 @@ namespace Sistema_de_Armazenamento_de_Questões.Controllers
         // GET: School/Details/5
         public IActionResult Details(int id)
         {
-            var school = _schoolRepository.GetById(id);
+            var school = _schoolRepository.GetStudentsBySchool(id);
             if (school == null)
             {
                 return NotFound();
